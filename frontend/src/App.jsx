@@ -5,7 +5,8 @@ import {
   getUniqueProps,
   getUniqueCostumes,
   getUniqueLocations,
-  getActorScenes
+  getActorScenes,
+  getLocationGroups
 } from "./utils/projectAggregation";
 
 function App() {
@@ -29,6 +30,11 @@ function App() {
 
   const locations =
     getUniqueLocations(scenes);
+
+  const locationGroups =
+  getLocationGroups(
+    scenes
+  );
 
   const handleUpload = async () => {
     setError(null);
@@ -157,6 +163,15 @@ function App() {
             >
               Locations
             </button>
+            <button
+  onClick={() =>
+    setActiveTab(
+      "locationGroups"
+    )
+  }
+>
+  Location Groups
+</button>
           </div>
 
           <hr />
@@ -372,6 +387,76 @@ function App() {
               )}
             </ul>
           )}
+        
+        {
+  activeTab ===
+    "locationGroups" && (
+
+    <div>
+
+      {
+        Object.entries(
+          locationGroups
+        ).map(
+          (
+            [
+              location,
+              locationScenes
+            ]
+          ) => (
+
+            <div
+              key={location}
+              style={{
+                border:
+                  "1px solid gray",
+                padding: "10px",
+                marginBottom:
+                  "10px"
+              }}
+            >
+
+              <h3>
+                {location}
+              </h3>
+
+              <ul>
+
+                {
+                  locationScenes.map(
+                    scene => (
+
+                      <li
+                        key={
+                          scene.sceneNumber
+                        }
+                      >
+                        Scene{" "}
+                        {
+                          scene.sceneNumber
+                        }
+                        {" - "}
+                        {
+                          scene.title
+                        }
+                      </li>
+
+                    )
+                  )
+                }
+
+              </ul>
+
+            </div>
+
+          )
+        )
+      }
+
+    </div>
+
+)
+}
         </div>
       )}
     </div>
