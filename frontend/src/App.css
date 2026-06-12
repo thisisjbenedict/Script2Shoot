@@ -1,184 +1,332 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+:root{
+  --bg:#0b0d0f;
+  --surface:#0f1417;
+  --panel:#12161a;
+  --muted:#9aa3a8;
+  --text:#e6eef2;
+  --border:rgba(255,255,255,0.04);
+  --accent:#4aa3ff;
+  --accent-strong:#2f8ce6;
+  --danger:#e06a6a;
+  --radius:14px;
+  --content-width:980px;
+  font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
 
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+
+/* Centered single-column dashboard */
+.app{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:40px 20px}
+.container{width:100%;max-width:var(--content-width)}
+
+/* Header & branding */
+.header{display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:32px;padding:12px 8px}
+.title-section{margin-bottom:18px}
+.title-section h1{margin:0;font-size:36px;letter-spacing:-0.4px;font-weight:700;color:var(--text)}
+.title-section p{margin:8px 0 0;color:var(--muted);font-size:14px}
+.title-section p::after{content:'Script Breakdown • Scheduling • Production Planning';display:block}
+
+/* Upload card - professional */
+.upload-section{display:flex;justify-content:center}
+.upload-card{width:100%;max-width:640px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;display:flex;gap:16px;align-items:center}
+.upload-left{display:flex;align-items:center;gap:12px;flex:1}
+.pdf-icon{width:48px;height:48px;flex:0 0 48px;border-radius:8px;background:#e34b4b;display:flex;align-items:center;justify-content:center;font-weight:700;color:white}
+.file-input{flex:1;background:transparent;border:0;color:var(--text);padding:8px 10px;border-radius:8px;font-size:14px}
+.file-input::file-selector-button{display:none}
+.file-input::-webkit-file-upload-button{visibility:hidden}
+.file-input:focus{outline:2px solid rgba(74,163,255,0.12);outline-offset:2px}
+
+.upload-actions{display:flex;gap:10px;align-items:center}
+.btn{border-radius:10px;padding:10px 16px;font-weight:700;border:1px solid transparent;cursor:pointer;background:transparent;color:var(--text)}
+.btn-primary{background:var(--accent);border-color:var(--accent-strong);color:white;padding:12px 18px;font-size:15px}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+
+/* Replace button text visually to "Analyze Script" while preserving underlying text
+   Show different visual text when disabled (analyzing) */
+.upload-actions .btn-primary{position:relative;color:transparent}
+.upload-actions .btn-primary::after{content:'Analyze Script';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:white}
+.upload-actions .btn-primary:disabled::after{content:'Analyzing...';color:rgba(255,255,255,0.9)}
+
+/* Metrics cards - SaaS analytics style */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:28px 0}
+.metric{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:12px;padding:18px}
+.metric .num{font-size:28px;font-weight:800;color:var(--text);line-height:1}
+.metric .label{margin-top:6px;color:var(--muted);font-size:13px}
+.metric .delta{margin-top:8px;color:var(--muted);font-size:12px}
+
+/* Tabs - pill style */
+.tabs{display:flex;justify-content:center;gap:12px;margin-bottom:22px}
+.tab{padding:8px 14px;border-radius:999px;border:1px solid transparent;background:transparent;color:var(--muted);font-weight:600}
+.tab:hover{background:rgba(255,255,255,0.02)}
+.tab.active{background:var(--panel);color:var(--text);border:1px solid var(--border);box-shadow:inset 0 -1px 0 rgba(0,0,0,0.2)}
+
+/* Content area */
+.content{display:flex;flex-direction:column;gap:14px}
+.item-card{display:flex;gap:16px;align-items:flex-start;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px}
+.item-left{min-width:56px;font-weight:800;font-size:18px;color:var(--accent)}
+.item-main .item-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px}
+.item-sub{color:var(--muted);font-size:13px}
+
+/* Right rail / shoot grid smaller but centered below */
+.shoot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+
+/* Utilities and responsiveness */
+.muted{color:var(--muted)}
+.divider{height:1px;background:var(--border);width:100%}
+
+@media (max-width:960px){
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .title-section h1{font-size:28px}
+  .upload-card{max-width:100%}
+}
+
+@media (max-width:560px){
+  .metrics{grid-template-columns:repeat(1,1fr)}
+  .upload-card{flex-direction:column;align-items:stretch}
+  .upload-actions{justify-content:stretch}
+  .btn-primary{width:100%}
+}
+
+button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2563eb;
+}
+
+.tab {
+  cursor: pointer;
+}
+
+.tab:hover {
+
+  color: white;
+
+  border-color: #3b82f6;
+
+  transform: translateY(-1px);
+
 }
 
 .hero {
-  position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
+  text-align: center;
+  margin-bottom: 40px;
 }
 
-#center {
+.hero h1 {
+  margin: 0;
+  font-size: 4rem;
+  font-weight: 800;
+  letter-spacing: -2px;
+}
+
+.hero-tagline {
+  margin-top: 16px;
+  font-size: 1.2rem;
+  color: #d1d5db;
+}
+
+.subtitle {
+  margin-top: 12px;
+  color: var(--muted);
+}
+
+.upload-card {
+
+  background: var(--panel);
+
+  border: 1px solid var(--border);
+
+  border-radius: 16px;
+
+  padding: 24px;
+
+  margin-bottom: 32px;
+
   display: flex;
-  flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
 
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+  justify-content: space-between;
+
+  align-items: center;
 }
 
-#next-steps {
+.file-info {
   display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
+  gap: 16px;
+  align-items: center;
 }
 
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
+.file-icon {
+  font-size: 2rem;
 }
 
-#next-steps ul {
-  list-style: none;
-  padding: 0;
+.file-name {
+  font-weight: 600;
+}
+
+.file-status {
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.upload-actions {
   display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
+  gap: 12px;
+  align-items: center;
 }
 
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
+.hero-badge {
+
+  display: inline-block;
+
+  padding: 8px 16px;
+
+  border-radius: 999px;
+
+  background:
+    rgba(59,130,246,0.15);
+
+  border:
+    1px solid rgba(59,130,246,0.3);
+
+  color: #60a5fa;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  margin-bottom: 18px;
+
 }
 
-.ticks {
-  position: relative;
-  width: 100%;
+.hero h1 {
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
-  }
+  font-size: 72px;
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
-  }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
-  }
+  margin: 0;
+
+  line-height: 1;
+
+}
+
+.hero-tagline {
+
+  font-size: 24px;
+
+  margin-top: 20px;
+
+  color: white;
+
+}
+
+.subtitle {
+
+  margin-top: 14px;
+
+  color: #9ca3af;
+
+  font-size: 15px;
+
+}
+
+.browse-btn {
+
+  background: #111827;
+
+  border: 1px solid #374151;
+
+  color: white;
+
+  padding: 12px 18px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+
+  text-decoration: none;
+
+}
+
+.browse-btn:hover {
+
+  border-color: #3b82f6;
+
+}
+
+.analyze-btn {
+
+  background: #3b82f6;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 10px;
+
+  padding: 12px 20px;
+
+  font-weight: 600;
+
+}
+
+.tab {
+
+  cursor: pointer;
+
+}
+
+.tab:hover {
+
+  color: white;
+
+  border-color: #3b82f6;
+
+}
+
+.tab.active {
+
+  background: #1d4ed8;
+
+  color: white;
+
+  border-color: #2563eb;
+
+}
+
+.item-card:hover {
+
+  transform: translateY(-2px);
+
+  border-color:
+    rgba(59,130,246,0.25);
+
+  transition: 0.2s;
+
+}
+
+.file-name {
+
+  font-size: 18px;
+
+  font-weight: 600;
+
+}
+
+.file-status {
+
+  color: #9ca3af;
+
+  margin-top: 4px;
+
 }

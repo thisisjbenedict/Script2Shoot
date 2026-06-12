@@ -1,4 +1,4 @@
-export const getUniqueActors = (scenes) => {
+export const getUniqueActors = (scenes = []) => {
 
   return [
     ...new Set(
@@ -10,7 +10,7 @@ export const getUniqueActors = (scenes) => {
 
 };
 
-export const getUniqueProps = (scenes) => {
+export const getUniqueProps = (scenes = []) => {
 
   return [
     ...new Set(
@@ -22,7 +22,7 @@ export const getUniqueProps = (scenes) => {
 
 };
 
-export const getUniqueCostumes = (scenes) => {
+export const getUniqueCostumes = (scenes = []) => {
 
   return [
     ...new Set(
@@ -34,7 +34,7 @@ export const getUniqueCostumes = (scenes) => {
 
 };
 
-export const getUniqueLocations = (scenes) => {
+export const getUniqueLocations = (scenes=[]) => {
 
   return [
     ...new Set(
@@ -47,8 +47,8 @@ export const getUniqueLocations = (scenes) => {
 };
 
 export const getActorScenes = (
-  actorName,
-  scenes
+  scenes = [],
+  actorName
 ) => {
 
   return scenes.filter(
@@ -61,7 +61,7 @@ export const getActorScenes = (
 };
 
 export const getLocationGroups = (
-  scenes
+  scenes = []
 ) => {
 
   const grouped = {};

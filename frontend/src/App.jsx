@@ -8,6 +8,40 @@ import {
   getActorScenes,
   getLocationGroups
 } from "./utils/projectAggregation";
+import "./App.css";
+
+function Metric({ label, value }) {
+  return (
+    <div className="metric card">
+      <div className="num">{value}</div>
+      <div className="label">{label}</div>
+    </div>
+  );
+}
+
+function Tab({ id, active, onClick, children }) {
+  return (
+    <button
+      className={"tab" + (active ? " active" : "")}
+      onClick={() => onClick(id)}
+      aria-pressed={active}
+    >
+      {children}
+    </button>
+  );
+}
+
+function ItemCard({ left, title, sub }) {
+  return (
+    <div className="item-card">
+      <div className="item-left">{left}</div>
+      <div className="item-main">
+        <div className="item-title">{title}</div>
+        {sub && <div className="item-sub">{sub}</div>}
+      </div>
+    </div>
+  );
+}
 
 function App() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -16,25 +50,16 @@ function App() {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("scenes");
 
-  const scenes =
-    uploadResponse?.analysis?.scenes || [];
+  const scenes = uploadResponse?.analysis?.scenes ?? [];
+  const shootPlan = uploadResponse?.analysis ?.shootPlan || [];
+  
 
-  const actors =
-    getUniqueActors(scenes);
+  const actors = getUniqueActors(scenes);
+  const props = getUniqueProps(scenes);
+  const costumes = getUniqueCostumes(scenes);
+  const locations = getUniqueLocations(scenes);
+  const locationGroups = getLocationGroups(scenes);
 
-  const props =
-    getUniqueProps(scenes);
-
-  const costumes =
-    getUniqueCostumes(scenes);
-
-  const locations =
-    getUniqueLocations(scenes);
-
-  const locationGroups =
-  getLocationGroups(
-    scenes
-  );
 
   const handleUpload = async () => {
     setError(null);
@@ -50,417 +75,347 @@ function App() {
 
     try {
       setIsUploading(true);
-
-      const result =
-        await uploadScript(formData);
-
+      const result = await uploadScript(formData);
       setUploadResponse(result);
-    } catch (error) {
-      setError(error.message);
+    } catch (err) {
+      setError(err?.message || String(err));
     } finally {
       setIsUploading(false);
     }
   };
 
-  return (
-    <div style={{ padding: "20px" }}>
-      <h1>AD Copilot</h1>
+  const sceneCount = scenes.length;
+  const actorCount = actors.length;
+  const locationCount = locations.length;
+  const propCount = props.length;
 
-      <input
-        type="file"
-        accept=".pdf"
-        onChange={(event) => {
-          setSelectedFile(
-            event.target.files[0]
-          );
-        }}
+  return (
+  <div className="app">
+
+    <div className="container">
+
+      <header className="header">
+
+  <div className="hero">
+
+  <h1>Script2Shoot</h1>
+
+  <p className="hero-tagline">
+    Transform screenplays into production-ready plans
+  </p>
+
+  <p className="subtitle">
+    Script Breakdown • Scheduling • Production Planning
+  </p>
+
+</div>
+
+<div className="upload-card">
+
+  <div className="file-info">
+
+    {/* <div className="file-icon">
+      📄
+    </div> */}
+
+    <div>
+
+      <div className="file-name">
+        {
+          selectedFile
+            ? selectedFile.name
+            : "Upload screenplay"
+        }
+      </div>
+
+      {/* <div className="file-status">
+        {
+          selectedFile
+            ? "Ready for AI analysis"
+            : "Select a screenplay PDF to begin"
+        }
+      </div> */}
+
+    </div>
+
+  </div>
+
+  <div className="upload-actions">
+
+    <input
+      id="script-upload"
+      type="file"
+      accept=".pdf"
+      hidden
+      onChange={(e) =>
+        setSelectedFile(
+          e.target.files?.[0] || null
+        )
+      }
+    />
+
+    <label
+      htmlFor="script-upload"
+      className="browse-btn"
+    >
+      Browse Script
+    </label>
+
+    <button
+      className="analyze-btn"
+      onClick={handleUpload}
+      disabled={
+        isUploading ||
+        !selectedFile
+      }
+    >
+      {
+        isUploading
+          ? "Analyzing..."
+          : "Analyze Script"
+      }
+    </button>
+
+  </div>
+
+</div>
+  
+</header>
+{sceneCount > 0 && (
+  <section className="metrics">
+
+  <Metric
+    label="Scenes"
+    value={sceneCount}
+  />
+
+  <Metric
+    label="Actors"
+    value={actorCount}
+  />
+
+  <Metric
+    label="Locations"
+    value={locationCount}
+  />
+
+  <Metric
+    label="Props"
+    value={propCount}
+  />
+
+</section>
+)}
+      <section className="tabs">
+
+        <Tab
+          id="scenes"
+          active={activeTab==="scenes"}
+          onClick={setActiveTab}
+        >
+          Scenes
+        </Tab>
+
+        <Tab
+          id="actors"
+          active={activeTab==="actors"}
+          onClick={setActiveTab}
+        >
+          Actors
+        </Tab>
+
+        <Tab
+          id="locations"
+          active={activeTab==="locations"}
+          onClick={setActiveTab}
+        >
+          Locations
+        </Tab>
+
+        <Tab
+          id="props"
+          active={activeTab==="props"}
+          onClick={setActiveTab}
+        >
+          Props
+        </Tab>
+
+        <Tab
+          id="shoot"
+          active={activeTab==="shoot"}
+          onClick={setActiveTab}
+        >
+          Shoot Plan
+        </Tab>
+
+      </section>
+
+      <main className="content">
+
+        {activeTab === "scenes" && (
+
+  <>
+
+    {scenes.map((scene) => (
+
+      <ItemCard
+        key={scene.sceneNumber}
+        left={scene.sceneNumber}
+        title={
+          scene.title ||
+          scene.slugline
+        }
+        sub={
+  `📍 ${scene.location}
+   • 👥 ${scene.actors.length} actors
+   • ⚡ Complexity ${scene.complexityScore}`
+}
       />
 
-      {isUploading ? (
-        <p>Uploading...</p>
-      ) : (
-        <button
-          disabled={isUploading}
-          onClick={handleUpload}
-        >
-          Upload
-        </button>
-      )}
+    ))}
 
-      {error && (
-        <p>Error: {error}</p>
-      )}
+  </>
 
-      {uploadResponse && (
-        <div>
+)}
 
-          <h2>Project Summary</h2>
+{activeTab === "actors" && (
 
-          <p>
-            {
-              uploadResponse.analysis
-                ?.projectSummary
-            }
-          </p>
+  <>
 
-          <p>
-            <strong>Genre:</strong>{" "}
-            {
-              uploadResponse.analysis
-                ?.genre
-            }
-          </p>
+    {actors.map((actor) => (
 
-          <p>
-            <strong>
-              Estimated Scene Count:
-            </strong>{" "}
-            {
-              uploadResponse.analysis
-                ?.estimatedSceneCount
-            }
-          </p>
+      <ItemCard
+        key={actor}
+        left="🎭"
+        title={actor}
+        sub={
+  `Appears in ${
+    getActorScenes(
+      scenes,
+      actor
+    ).length
+  } scenes`
+}
+      />
 
-          <hr />
+    ))}
 
-          <div>
-            <button
-              onClick={() =>
-                setActiveTab("scenes")
-              }
-            >
-              Scenes
-            </button>
+  </>
 
-            <button
-              onClick={() =>
-                setActiveTab("actors")
-              }
-            >
-              Actors
-            </button>
+)}
 
-            <button
-              onClick={() =>
-                setActiveTab("props")
-              }
-            >
-              Props
-            </button>
+{activeTab === "locations" && (
 
-            <button
-              onClick={() =>
-                setActiveTab("costumes")
-              }
-            >
-              Costumes
-            </button>
+  <>
 
-            <button
-              onClick={() =>
-                setActiveTab("locations")
-              }
-            >
-              Locations
-            </button>
-            <button
-  onClick={() =>
-    setActiveTab(
-      "locationGroups"
-    )
-  }
->
-  Location Groups
-</button>
-          </div>
+    {locations.map((location) => {
 
-          <hr />
+      const count =
+        scenes.filter(
+          scene =>
+            scene.location === location
+        ).length;
 
-          {activeTab === "scenes" && (
-            <div>
+      return (
 
-              {scenes.map((scene) => (
-                <div
-                  key={
-                    scene.sceneNumber
-                  }
-                  style={{
-                    border:
-                      "1px solid gray",
-                    padding: "10px",
-                    marginBottom:
-                      "10px",
-                  }}
-                >
-                  <h3>
-                    Scene{" "}
-                    {
-                      scene.sceneNumber
-                    }
-                  </h3>
+        <ItemCard
+          key={location}
+          left="📍"
+          title={location}
+          sub={`${count} scenes`}
+        />
 
-                  <p>
-                    <strong>
-                      Title:
-                    </strong>{" "}
-                    {scene.title}
-                  </p>
+      );
 
-                  <p>
-                    <strong>
-                      Location:
-                    </strong>{" "}
-                    {scene.location}
-                  </p>
+    })}
 
-                  <p>
-                    <strong>
-                      Actors:
-                    </strong>{" "}
-                    {scene.actors.join(
-                      ", "
-                    )}
-                  </p>
+  </>
 
-                  <p>
-                    <strong>
-                      Props:
-                    </strong>{" "}
-                    {scene.props.join(
-                      ", "
-                    )}
-                  </p>
+)}
 
-                  <p>
-                    <strong>
-                      Costumes:
-                    </strong>{" "}
-                    {scene.costumes.join(
-                      ", "
-                    )}
-                  </p>
+{activeTab === "props" && (
 
-                  <p>
-                    <strong>
-                      Special
-                      Requirements:
-                    </strong>{" "}
-                    {scene.specialRequirements.join(
-                      ", "
-                    )}
-                  </p>
+  <>
 
-                  <p>
-                    <strong>
-                      Complexity:
-                    </strong>{" "}
-                    {
-                      scene.complexityScore
-                    }
-                    /10
-                  </p>
+    {props.map((prop) => {
 
-                  <p>
-                    <strong>
-                      Reasons:
-                    </strong>{" "}
-                    {scene.complexityReasons.join(
-                      ", "
-                    )}
-                  </p>
-                </div>
-              ))}
+      const count =
+        scenes.filter(
+          scene =>
+            scene.props.includes(prop)
+        ).length;
 
-            </div>
-          )}
+      return (
 
-          {activeTab === "actors" && (
+        <ItemCard
+          key={prop}
+          left="📦"
+          title={prop}
+          sub={`Used in ${count} scenes`}
+        />
 
-  <div>
+      );
 
-    {
-      actors.map(actor => {
+    })}
 
-        const actorScenes =
-          getActorScenes(
-            actor,
-            scenes
-          );
+  </>
 
-        return (
+)}
 
-          <div
-            key={actor}
-            style={{
-              border:
-                "1px solid gray",
-              padding: "10px",
-              marginBottom:
-                "10px"
-            }}
-          >
+{activeTab === "shoot" && (
 
-            <h3>
-              {actor}
-            </h3>
+  <div className="shoot-grid">
 
-            <p>
-              Appears in:
-            </p>
+    {shootPlan.map(day => (
 
-            <ul>
+      <div
+        key={day.day}
+        className="card"
+      >
 
-              {
-                actorScenes.map(
-                  scene => (
+        <h3>
+          Day {day.day}
+        </h3>
 
-                    <li
-                      key={
-                        scene.sceneNumber
-                      }
-                    >
-                      Scene{" "}
-                      {
-                        scene.sceneNumber
-                      }
-                      {" - "}
-                      {
-                        scene.title
-                      }
-                    </li>
+        <p>
+          📍 {day.location}
+        </p>
+<p>
+  🎬 Scenes:
+  {" "}
+  {day.sceneNumbers.join(", ")}
+</p>
 
-                  )
-                )
-              }
+<p>
+  📊 Total Scenes:
+  {" "}
+  {day.totalScenes}
+</p>
 
-            </ul>
+<p>
+  ⚡ Avg Complexity:
+  {" "}
+  {day.averageComplexity}
+</p>
 
-          </div>
+<p>
+  💡 {day.recommendation}
+</p>
 
-        );
+      </div>
 
-      })
-    }
+    ))}
 
   </div>
 
 )}
 
-          {activeTab === "props" && (
-            <ul>
-              {props.map(
-                (prop) => (
-                  <li key={prop}>
-                    {prop}
-                  </li>
-                )
-              )}
-            </ul>
-          )}
-
-          {activeTab ===
-            "costumes" && (
-            <ul>
-              {costumes.map(
-                (costume) => (
-                  <li
-                    key={costume}
-                  >
-                    {costume}
-                  </li>
-                )
-              )}
-            </ul>
-          )}
-
-          {activeTab ===
-            "locations" && (
-            <ul>
-              {locations.map(
-                (location) => (
-                  <li
-                    key={location}
-                  >
-                    {location}
-                  </li>
-                )
-              )}
-            </ul>
-          )}
-        
-        {
-  activeTab ===
-    "locationGroups" && (
-
-    <div>
-
-      {
-        Object.entries(
-          locationGroups
-        ).map(
-          (
-            [
-              location,
-              locationScenes
-            ]
-          ) => (
-
-            <div
-              key={location}
-              style={{
-                border:
-                  "1px solid gray",
-                padding: "10px",
-                marginBottom:
-                  "10px"
-              }}
-            >
-
-              <h3>
-                {location}
-              </h3>
-
-              <ul>
-
-                {
-                  locationScenes.map(
-                    scene => (
-
-                      <li
-                        key={
-                          scene.sceneNumber
-                        }
-                      >
-                        Scene{" "}
-                        {
-                          scene.sceneNumber
-                        }
-                        {" - "}
-                        {
-                          scene.title
-                        }
-                      </li>
-
-                    )
-                  )
-                }
-
-              </ul>
-
-            </div>
-
-          )
-        )
-      }
+      </main>
 
     </div>
 
-)
-}
-        </div>
-      )}
-    </div>
-  );
+  </div>
+);
 }
 
 export default App;

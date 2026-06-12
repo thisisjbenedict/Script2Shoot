@@ -10,6 +10,12 @@ const {
   calculateComplexity
 } = require("./complexityService");
 
+const {
+  generateShootPlan
+} = require(
+  "./shootPlanService"
+);
+
 const client = new OpenAI({
   apiKey,
   baseURL: endpoint,
@@ -106,6 +112,12 @@ ${text.substring(0, 30000)}`
         complexity.reasons,
     };
   });
+
+analysis.shootPlan =
+  generateShootPlan(
+    analysis.scenes
+  );
+  
 
   console.log(analysis);
 

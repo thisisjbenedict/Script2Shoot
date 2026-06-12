@@ -1,31 +1,52 @@
 const calculateComplexity = (scene) => {
 
+  const actors =
+    Array.isArray(scene.actors)
+      ? scene.actors
+      : [];
+
+  const props =
+    Array.isArray(scene.props)
+      ? scene.props
+      : [];
+
+  const specialRequirements =
+    Array.isArray(
+      scene.specialRequirements
+    )
+      ? scene.specialRequirements
+      : [];
+
+  const location =
+    String(
+      scene.location || ""
+    ).toLowerCase();
+
   let score = 1;
 
   const reasons = [];
 
-  score += scene.actors.length;
+  score += actors.length;
 
-  if (scene.actors.length >= 5) {
+  if (actors.length >= 5){
   score += 2;
   reasons.push("Large cast");
 }
 
 if (
-  scene.location &&
-  scene.location.toLowerCase().includes("ext")
-) {
+  location.includes("ext")
+){
   score += 2;
   reasons.push("Outdoor location");
 }
 
-  if (scene.props.length > 5) {
+  if (props.length > 5){
     score += 2;
     reasons.push("Many props");
   }
 
   if (
-    scene.specialRequirements.includes(
+    specialRequirements.includes(
       "Crowd"
     )
   ) {
