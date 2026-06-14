@@ -81,11 +81,11 @@ Special requirements may include:
 - outdoor weather dependency
 - location permissions
 
-Return at most 20 scenes.
+Return ALL scenes found in the screenplay.
 
 Screenplay:
 
-${text.substring(0, 30000)}`
+${text.substring(0, 80000)}`
       });
 
     const cleanedJson =
