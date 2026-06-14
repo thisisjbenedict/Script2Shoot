@@ -1,16 +1,177 @@
-# React + Vite
+# Script2Shoot
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+Script2Shoot is an AI-powered production planning assistant designed for Assistant Directors, Line Producers, and Filmmakers.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The application analyzes screenplay PDFs and automatically generates production-ready breakdowns, including scenes, actors, locations, props, special requirements, shoot planning recommendations, and downloadable production reports.
 
-## React Compiler
+Script2Shoot helps production teams reduce manual screenplay breakdown time from hours to minutes.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Live Application
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+https://script2-shoot.vercel.app/
+
+---
+
+## Features
+
+* Screenplay PDF Upload
+* AI-Powered Scene Extraction
+* Actor Breakdown
+* Location Breakdown
+* Props Breakdown
+* Production Requirements Detection
+* Scene Complexity Analysis
+* Location-Based Shoot Planning
+* PDF Production Report Export
+
+---
+
+## Architecture Overview
+
+Frontend:
+
+* React
+* Vite
+* Axios
+
+Backend:
+
+* Node.js
+* Express
+* Multer
+* PDF Parsing Services
+
+AI Layer:
+
+* Azure OpenAI
+* GPT-4.1 Mini
+
+Workflow:
+
+Screenplay PDF
+→ Text Extraction
+→ GPT Analysis
+→ Structured JSON
+→ Production Breakdown
+→ Shoot Planning
+→ PDF Report Generation
+
+---
+
+## AI Tools Used
+
+### Azure OpenAI
+
+Model:
+
+* GPT-4.1 Mini
+
+AI Responsibilities:
+
+* Scene Extraction
+* Actor Identification
+* Props Detection
+* Location Detection
+* Costume Detection
+* Production Requirement Detection
+* Complexity Assessment
+* Shoot Plan Generation Support
+
+Prompt engineering was used to convert screenplay text into structured production planning data.
+
+---
+
+## 📦 Dependencies
+
+Frontend:
+
+* React
+* Vite
+* Axios
+
+Backend:
+
+* Express
+* OpenAI SDK
+* Multer
+* PDFKit
+* PDF Parsing Libraries
+
+Deployment:
+
+* Vercel
+* Render
+
+---
+
+## ⚙️ Setup Instructions
+
+### Backend
+
+```bash
+cd backend
+
+npm install
+
+npm start
+```
+
+Create a `.env` file:
+
+```env
+AZURE_OPENAI_ENDPOINT=YOUR_ENDPOINT
+AZURE_OPENAI_API_KEY=YOUR_KEY
+AZURE_OPENAI_DEPLOYMENT=YOUR_DEPLOYMENT
+```
+
+### Frontend
+
+```bash
+cd frontend
+
+npm install
+
+npm run dev
+```
+
+Create a `.env` file:
+
+```env
+VITE_API_URL=http://localhost:3001
+```
+
+---
+
+## 👥 Team
+
+### Jerome Benedict
+
+---
+
+## 📸 Screenshots
+
+See:
+
+* docs/screenshots/Home.png
+* docs/screenshots/Analysing.png
+* docs/screenshots/Metrics.png
+* docs/screenshots/Scenes.png
+* docs/screenshots/Actors.png
+* docs/screenshots/Locations.png
+* docs/screenshots/Props.png
+* docs/screenshots/Shootplan.png
+
+---
+
+## 🔮 Future Enhancements
+
+* Full Screenplay Chunking
+* Advanced Scheduling Optimization
+* Budget Estimation
+* Crew Planning
+* Call Sheet Generation
+* Multi-Script Project Management
