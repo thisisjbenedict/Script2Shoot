@@ -159,7 +159,7 @@ A complete gallery of application screenshots is available in the `docs/screensh
 Preview:
 
 ![Scene Breakdown](docs/screenshots/Home.png)
-![Shoot Plan](docs/screenshots/shootplan.png)
+![Shoot Plan](docs/screenshots/Shootplan.png)
 
 ---
 
