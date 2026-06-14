@@ -85,7 +85,7 @@ Prompt engineering was used to convert screenplay text into structured productio
 
 ---
 
-## 📦 Dependencies
+## Dependencies
 
 Frontend:
 
@@ -108,7 +108,7 @@ Deployment:
 
 ---
 
-## ⚙️ Setup Instructions
+## Setup Instructions
 
 ### Backend
 
@@ -146,28 +146,24 @@ VITE_API_URL=http://localhost:3001
 
 ---
 
-## 👥 Team
+## Team
 
 ### Jerome Benedict
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
-See:
+A complete gallery of application screenshots is available in the `docs/screenshots` folder.
 
-* docs/screenshots/Home.png
-* docs/screenshots/Analysing.png
-* docs/screenshots/Metrics.png
-* docs/screenshots/Scenes.png
-* docs/screenshots/Actors.png
-* docs/screenshots/Locations.png
-* docs/screenshots/Props.png
-* docs/screenshots/Shootplan.png
+Preview:
+
+![Scene Breakdown](docs/screenshots/Home.png)
+![Shoot Plan](docs/screenshots/shootplan.png)
 
 ---
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 * Full Screenplay Chunking
 * Advanced Scheduling Optimization
